@@ -5,7 +5,7 @@ import {usePuterStore} from "~/lib/puter";
 import {useNavigate} from "react-router";
 import {convertPdfToImage} from "~/lib/pdf2img";
 import {generateUUID} from "~/lib/utils";
-import {prepareInstructions} from "../../constants";
+import {AIResponseFormat, prepareInstructions} from "../../constants";
 
 const Upload = () => {
     const {auth, fs, ai, isLoading, kv,} = usePuterStore();
@@ -28,7 +28,7 @@ const Upload = () => {
         setStatusText('Converting to image...');
         const imageFile = await convertPdfToImage(file);
 
-        if (!imageFile) return setStatusText('Error in converting the file to image');
+        if (!imageFile.file) return setStatusText('Error in converting the file to image');
 
         setStatusText('Uploading the image...');
         const uploadedImage = await fs.upload([imageFile.file]);
