@@ -38,7 +38,7 @@ const FileUploader = ({onFileSelect}: FileUploaderProps) => {
             <div {...getRootProps()}>
                 <input {...getInputProps()} />
                 <div className="space-y-4 cursor-pointer">
-u
+
                     {file ? (
                         <div className="uploader-selected-file" onClick={(e) => e.stopPropagation()}>
                             <img src="/images/pdf.png" alt="pdf" className="size-10"/>
