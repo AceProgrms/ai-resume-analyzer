@@ -12,18 +12,20 @@ const FileUploader = ({onFileSelect}: FileUploaderProps) => {
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0] || null;
-
         setSelectedFile(file);
         onFileSelect?.(file);
-        // Do something with the files
     }, [onFileSelect]);
 
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    const maxFileSize = 20*1024*1024;
+
+    const {getRootProps, getInputProps, isDragActive, acceptedFiles} = useDropzone({
         onDrop,
         multiple: false,
         accept: { 'application/pdf': ['.pdf']},
-        maxSize: 20 * 1024 * 1024,
+        maxSize: maxFileSize,
     })
+
+    const file = acceptedFiles[0] || null;
 
     const handleRemove = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -36,18 +38,20 @@ const FileUploader = ({onFileSelect}: FileUploaderProps) => {
             <div {...getRootProps()}>
                 <input {...getInputProps()} />
                 <div className="space-y-4 cursor-pointer">
-
-                    {selectedFile ? (
+u
+                    {file ? (
                         <div className="uploader-selected-file" onClick={(e) => e.stopPropagation()}>
                             <img src="/images/pdf.png" alt="pdf" className="size-10"/>
                                 <div className="flex items-center space-x-3">
 
                                 <div>
-                                    <p className="text-sm text-gray-700 font-medium truncate max-w-xs">{selectedFile.name}</p>
-                                    <p className="text-sm text-gray-500">({formatSize(selectedFile.size)})</p>
+                                    <p className="text-sm text-gray-700 font-medium truncate max-w-xs">{file.name}</p>
+                                    <p className="text-sm text-gray-500">({formatSize(file.size)})</p>
                                 </div>
                             </div>
-                            <button className="p-2 cursor-pointer" onClick={handleRemove}>
+                            <button className="p-2 cursor-pointer" onClick={(event) => {
+                                onFileSelect?.(null)
+                            }}>
                                 <img src="/icons/cross.svg" alt="remove" className="w-4 h-4"/>
                             </button>
                         </div>
@@ -61,7 +65,7 @@ const FileUploader = ({onFileSelect}: FileUploaderProps) => {
                                     Click to Upload
                                 </span> or drag and drop
                             </p>
-                            <p className="text-lg text-gray-500">PDF (max 20 MB)</p>
+                            <p className="text-lg text-gray-500">PDF (max {formatSize(maxFileSize)})</p>
                         </div>
                     )}
                 </div>
